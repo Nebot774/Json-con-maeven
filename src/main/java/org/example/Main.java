@@ -1,6 +1,8 @@
 package org.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +30,16 @@ public class Main {
     public static String escibriListaObjetosaJson(List<Book> libros){
         try{
             ObjectMapper objectMapper=new ObjectMapper();
-
-
+            // La siguiente línea es opcional, pero hace que el JSON se muestre con formato
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            return objectMapper.writeValueAsString(libros);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
 
     }
+
+
 
 
 }
