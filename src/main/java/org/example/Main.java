@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         //instanciamos array de objetos book
         List<Book> libros=new ArrayList<>();
@@ -22,6 +25,15 @@ public class Main {
         libros.add(libro1);
         libros.add(libro2);
         libros.add(libro3);
+
+        //llamamos al metodo escibriListaObjetosaJson para convertir la lista de objetos en un fichero JSON
+        String jsonContenido=escibriListaObjetosaJson(libros);
+
+        FileWriter archivo=new FileWriter("/home/adrcle/IdeaProjects/JSON_maeven/listaObjetosaJson.json");
+            archivo.write(jsonContenido);
+            archivo.write("\n");
+            archivo.close();
+
 
 
     }
