@@ -1,12 +1,16 @@
 package org.example;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +39,13 @@ public class Main {
             archivo.close();
 
 
+        //deserializamos el json en una lista de libros
+        //creamos un path de la ruta del json
+        Path ficheroArrayObjetosJson=Path.of("/home/adrcle/IdeaProjects/JSON_maeven/listaObjetosaJson.json");
+
+        List<Book> libros2=leerJsonConvertirObjetos(ficheroArrayObjetosJson);
+
+
 
     }
     //Utiliza la librería Jackson para serializar la lista de libros a un archivo JSON
@@ -51,6 +62,17 @@ public class Main {
 
     }
 
+    public static List<Book> leerJsonConvertirObjetos(Path ruta) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            // return objectMapper.readValue(ruta.toFile(), new TypeReference<List<Lenguaje>>() { });
+            return objectMapper.readValue(ruta.toFile(), new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+
+        }
+    }
 
 
 
