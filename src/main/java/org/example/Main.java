@@ -13,40 +13,89 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        Scanner teclado = new Scanner(System.in);
 
-        //instanciamos array de objetos book
-        List<Book> libros=new ArrayList<>();
+        // Instanciamos un array de objetos Book
+        List<Book> libros = new ArrayList<>();
 
-        //creamos objetos book
+        // Creamos objetos Book iniciales
         Book libro1 = new Book("978-1-234567-89-0", "El Gran Gatsby", "F. Scott Fitzgerald", 180, 1925);
         Book libro2 = new Book("978-2-345678-90-1", "Cien años de soledad", "Gabriel García Márquez", 368, 1967);
         Book libro3 = new Book("978-3-456789-01-2", "1984", "George Orwell", 328, 1949);
 
-        //añadimos l,os objetos al array
+        // Agregamos los objetos al array
         libros.add(libro1);
         libros.add(libro2);
         libros.add(libro3);
 
-        //llamamos al metodo escibriListaObjetosaJson para convertir la lista de objetos en un fichero JSON
-        String jsonContenido=escibriListaObjetosaJson(libros);
+        while (true) {
+            System.out.println("\nMenú:");
+            System.out.println("1. Agregar un nuevo libro");
+            System.out.println("2. Buscar libros por título o autor");
+            System.out.println("3. Ver la lista de todos los libros");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
 
-        FileWriter archivo=new FileWriter("/home/adrcle/IdeaProjects/JSON_maeven/listaObjetosaJson.json");
-            archivo.write(jsonContenido);
-            archivo.write("\n");
-            archivo.close();
+            int opcion = teclado.nextInt();
+            teclado.nextLine(); // Consumir la nueva línea
 
+            switch (opcion) {
+                case 1:
+                    System.out.println("Ingrese los detalles del nuevo libro:");
 
-        //deserializamos el json en una lista de libros
-        //creamos un path de la ruta del json
-        Path ficheroArrayObjetosJson=Path.of("/home/adrcle/IdeaProjects/JSON_maeven/listaObjetosaJson.json");
+                    System.out.print("ISBN: ");
+                    String isbn = teclado.nextLine();
 
-        List<Book> libros2=leerJsonConvertirObjetos(ficheroArrayObjetosJson);
+                    System.out.print("Título: ");
+                    String titulo = teclado.nextLine();
 
+                    System.out.print("Autor: ");
+                    String autor = teclado.nextLine();
 
+                    System.out.print("Número de páginas: ");
+                    int numPaginas = teclado.nextInt();
+                    teclado.nextLine(); // Consumir la nueva línea
 
+                    System.out.print("Año de publicación: ");
+                    int añoPublicacion = teclado.nextInt();
+                    teclado.nextLine(); // Consumir la nueva línea
+
+                    Book nuevoLibro = new Book(isbn, titulo, autor, numPaginas, añoPublicacion);
+                    libros.add(nuevoLibro);
+
+                    break;
+                case 2:
+                    System.out.print("Ingrese un título o autor para buscar libros: ");
+                    String consulta = teclado.nextLine();
+                    buscarLibrosPorTituloOAutor(libros, consulta);
+                    break;
+                case 3:
+                    System.out.println("Lista de todos los libros:");
+                    for (Book libro : libros) {
+                        System.out.println("ISBN: " + libro.getIsbn());
+                        System.out.println("Título: " + libro.getTitulo());
+                        System.out.println("Autor: " + libro.getAutor());
+                        System.out.println("Número de páginas: " + libro.getNumPaginas());
+                        System.out.println("Año de publicación: " + libro.getAnoPublicacion());
+                        System.out.println();
+                    }
+                    break;
+                case 4:
+                    // Guardar la lista de libros en un archivo JSON antes de salir
+                    String jsonContenido = escibriListaObjetosaJson(libros);
+                    FileWriter archivo = new FileWriter("listaObjetos.json");
+                    archivo.write(jsonContenido);
+                    archivo.close();
+                    System.out.println("¡Hasta luego!");
+                    System.exit(0);
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        }
     }
     //Utiliza la librería Jackson para serializar la lista de libros a un archivo JSON
 
@@ -74,6 +123,19 @@ public class Main {
         }
     }
 
+    //función que permita buscar libros por título o autor y mostrar los resultados.
+    public static void buscarLibrosPorTituloOAutor(List<Book> libros, String consulta) {
+        System.out.println("Resultados de la búsqueda para '" + consulta + "':");
+        for (Book libro : libros) {
+            if (libro.getTitulo().toLowerCase().contains(consulta.toLowerCase()) ||
+                    libro.getAutor().toLowerCase().contains(consulta.toLowerCase())) {
+                System.out.println("Título: " + libro.getTitulo());
+                System.out.println("Autor: " + libro.getAutor());
+                // Agrega más propiedades según tus necesidades
+            }
+        }
 
+
+    }
 
 }
