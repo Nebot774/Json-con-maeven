@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -87,11 +89,14 @@ public class Main {
                 case 4:
                     // Guardar la lista de libros en un archivo JSON antes de salir
                     String jsonContenido = escibriListaObjetosaJson(libros);
-                    FileWriter archivo = new FileWriter("listaObjetos.json");
-                    archivo.write(jsonContenido);
-                    archivo.close();
-                    System.out.println("¡Hasta luego!");
-                    System.exit(0);
+                    Path path = Paths.get("listaObjetos.json");
+                    try {
+                        Files.write(path, jsonContenido.getBytes());
+                        System.out.println("¡Hasta luego!");
+                        System.exit(0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
@@ -131,7 +136,7 @@ public class Main {
                     libro.getAutor().toLowerCase().contains(consulta.toLowerCase())) {
                 System.out.println("Título: " + libro.getTitulo());
                 System.out.println("Autor: " + libro.getAutor());
-                // Agrega más propiedades según tus necesidades
+
             }
         }
 
